@@ -1,0 +1,105 @@
+﻿<Window x:Class="MVVM.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:vm="clr-namespace:MVVM.ViewModel"
+        xmlns:local="clr-namespace:MVVM"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="562" Width="1000">
+
+    <Window.Resources>
+        <vm:VMTC x:Key="vmtc" CurrentPathLeft="C:\Users" CurrentPathRight="C:\Users"/>
+    </Window.Resources>
+
+    <Grid Background="LightGray" DataContext="{StaticResource vmtc}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="10*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.5*"/>
+                <ColumnDefinition Width="8*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="8*"/>
+                <ColumnDefinition Width="0.5*"/>
+            </Grid.ColumnDefinitions>
+            <ListView x:Name="LeftList" Grid.Column="1" ItemsSource="{Binding Path = LeftListOfPaths}" SelectedItem="{Binding Path=SelectedPathLeft, Mode=TwoWay}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <i:InvokeCommandAction Command="{Binding LeftLoad}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </ListView>
+
+
+            <ListView Grid.Column="3" ItemsSource="{Binding Path=RightListOfPaths}" SelectedItem="{Binding Path=SelectedPathRight, Mode=TwoWay}" >
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <i:InvokeCommandAction Command="{Binding RightLoad}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </ListView>
+            <!--<TextBox x:Name="txtLeft" Grid.Column="1" IsReadOnly="True"/>
+            <TextBox x:Name="txtRight" Grid.Column="3" IsReadOnly="True"/>-->
+        </Grid>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="5.5*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="2.5*"/>
+                <ColumnDefinition Width="5.5*"/>
+                <ColumnDefinition Width="0.5*"/>
+            </Grid.ColumnDefinitions>
+            <Label Content="path    " Grid.Column="0" HorizontalAlignment="Right" Margin="0 5"/>
+            <TextBox x:Name="txtPathLeft" Grid.Column="1" Margin="0 5" IsReadOnly="True" Background="LightGray" Text="{Binding Path=CurrentPathLeft}" VerticalContentAlignment="Center"/>
+            <Label Content="path    " Grid.Column="3" HorizontalAlignment="Right" Margin="0 5"/>
+            <TextBox x:Name="txtPathRight" Grid.Column="4" Margin="0 5" IsReadOnly="True" Background="LightGray" Text="{Binding Path=CurrentPathRight}" VerticalContentAlignment="Center"/>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="7*"/>
+                <ColumnDefinition Width="1.5*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="6.5*"/>
+                <ColumnDefinition Width="1.5*"/>
+                <ColumnDefinition Width="0.5*"/>
+            </Grid.ColumnDefinitions>
+            <Label Content="drive    " Grid.Column="0" HorizontalAlignment="Right" Margin="0 5"/>
+            <ComboBox Grid.Column="1" Margin="0 5" VerticalContentAlignment="Center" ItemsSource="{Binding Path=LeftListOfDrives}" SelectedItem="{Binding Path =LeftDiscSelection}" >
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="DropDownOpened">
+                        <i:InvokeCommandAction Command="{Binding RefreshLeftWhenDroppedDown}"/>
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <i:InvokeCommandAction Command="{Binding LeftDiscLoad}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </ComboBox>
+            <Label Content="drive    " Grid.Column="3" HorizontalAlignment="Right" Margin="0 5"/>
+            <ComboBox Name="driveRight" Grid.Column="4" Margin="0 5" VerticalContentAlignment="Center" ItemsSource="{Binding Path=RightListOfDrives}" SelectedItem="{Binding Path= RightDiscSelection}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="DropDownOpened">
+                        <i:InvokeCommandAction Command="{Binding RefreshRightWhenDroppedDown}"/>
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <i:InvokeCommandAction Command="{Binding RightDiscLoad}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </ComboBox>
+        </Grid>
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="5*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="5*"/>
+            </Grid.ColumnDefinitions>
+            <Button Name="btnCopy" Content="Copy >>" Grid.Column="1" Margin="0 5" Command="{Binding CopyFiles}"/>
+        </Grid>
+    </Grid>
+</Window>
